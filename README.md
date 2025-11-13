@@ -1,5 +1,4 @@
 # Despesas_Sc_Text-To-Sql
-# Despesas_Sc_Text-To-Sql
 
 Repositório que disponibiliza uma base de dados de despesas públicas do Estado de Santa Catarina, preparada para experimentos de Text-to-SQL (NL2SQL), com foco em consultas em português e inglês.
 
