@@ -1,73 +1,73 @@
 # Despesas_Sc_Text-To-Sql
 
-Repositório que disponibiliza uma base de dados de despesas públicas do Estado de Santa Catarina, preparada para experimentos de Text-to-SQL (NL2SQL), com foco em consultas em português e inglês.
+Repository providing a public-spending database for the State of Santa Catarina (Brazil), prepared for Text-to-SQL (NL2SQL) experiments, with a focus on queries in Portuguese and English.
 
 ---
 
-## 1. Visão geral
+## 1. Overview
 
-Este repositório reúne dados orçamentários e financeiros de despesas públicas do Estado de Santa Catarina, organizados para servir como:
+This repository gathers budget and expenditure data from the State of Santa Catarina, organized to serve as:
 
-- base de testes para modelos de Text-to-SQL em cenário zero-shot;
-- conjunto de exemplos de consultas em linguagem natural (português/inglês) para geração de SQL;
-- estudo de impacto de diferentes esquemas de banco de dados (tabela única vs. esquema em estrela).
+- a testbed for Text-to-SQL models in zero-shot scenarios;
+- a set of natural language queries (Portuguese/English) for SQL generation;
+- a study resource on how different database schemas (single table vs. star schema) affect performance.
 
-A base foi construída a partir de dados públicos obtidos em portais oficiais de transparência do governo de Santa Catarina, com foco em despesas executadas por órgãos estaduais.
+The dataset was built from public data obtained from official transparency portals of the government of Santa Catarina, focusing on executed expenditures by state agencies.
 
 ---
 
-## 2. Estrutura da base de dados
+## 2. Repository structure
 
-A organização exata dos arquivos pode ser ajustada, mas a proposta geral é:
+The exact organization of files may vary, but the general idea is:
 
-- um esquema em **tabela única** (modelo denormalizado);
-- um esquema em **estrela** (modelo dimensional).
+- one **single-table** schema (denormalized model);
+- one **star schema** (dimensional model).
 
-Exemplo de organização (sugestão):
+Example organization (you can adjust to match your actual files):
 
 - `data/`
   - `single_table/`
-    - `despesas_sc_single_table.sqlite` ou `.csv`
+    - `despesas_sc_single_table.sqlite` or `.csv`
   - `star_schema/`
     - `despesas_sc_star_schema.sqlite`  
-    - (opcional) arquivos auxiliares `.csv`
+    - (optional) auxiliary `.csv` files
 - `docs/`
-  - dicionário de dados, layout das colunas e exemplos de consultas
+  - data dictionary, column layouts and query examples
 - `examples/`
-  - exemplos de perguntas em português e inglês, com SQL esperado (quando disponível)
+  - sample questions in Portuguese and English, with expected SQL (when available)
 
-Adapte os nomes aos arquivos que você efetivamente colocar no repositório.
+Please adapt names and paths to the files actually included in this repository.
 
 ---
 
-## 3. Esquemas de banco de dados
+## 3. Database schemas
 
-### 3.1. Esquema em estrela (star schema)
+### 3.1. Star schema
 
-No esquema em estrela, os dados são organizados em:
+In the star schema, data are organized into:
 
-- uma tabela fato de despesas (ex.: `fato_despesa` ou `expense_fact`);
-- tabelas dimensão para tempo, órgão, função, categoria econômica etc.
+- one expense fact table (e.g., `expense_fact` or `fato_despesa`);
+- dimension tables for time, agency, function, economic category, etc.
 
-Exemplo de ideia de estrutura (ajuste para o seu schema real):
+Example structural idea (adjust to your real schema):
 
-- Tabela fato (ex.: `expense_fact`)
+- Fact table (e.g., `expense_fact`)
   - `id_expense`
   - `id_time`
   - `id_agency`
   - `id_function`
   - `amount`
   - `year`, `month`
-  - outros atributos numéricos ou de chave estrangeira
+  - other numeric or foreign key attributes
 
-- Dimensões (exemplos):
-  - `time_dim(id_time, date, year, month, day, ... )`
+- Dimensions (examples):
+  - `time_dim(id_time, date, year, month, day, ...)`
   - `agency_dim(id_agency, agency_code, agency_name, ...)`
   - `function_dim(id_function, function_code, function_name, ...)`
 
-### 3.2. Esquema em tabela única (single table)
+### 3.2. Single-table schema
 
-No esquema em tabela única, os mesmos atributos são denormalizados em uma única tabela, por exemplo:
+In the single-table schema, the same attributes are denormalized into a single table, for example:
 
 - `expenses_flat`
   - `date`
@@ -76,35 +76,35 @@ No esquema em tabela única, os mesmos atributos são denormalizados em uma úni
   - `agency_code`, `agency_name`
   - `function_code`, `function_name`
   - `amount`
-  - demais colunas descritivas
+  - other descriptive columns
 
 ---
 
-## 4. Uso para Text-to-SQL
+## 4. Text-to-SQL usage
 
-A base foi planejada para experimentos de Text-to-SQL em dois eixos principais:
+The dataset was designed for Text-to-SQL experiments along two main axes:
 
-1. **Idioma**
-   - Perguntas e descrições de colunas em **português** e **inglês**.
-   - Possibilita avaliar o impacto da língua da pergunta em relação à língua da base (nomes de tabelas e colunas).
+1. **Language**
+   - Questions and column descriptions in **Portuguese** and **English**.
+   - Allows evaluation of the impact of query language relative to the language of the schema (table and column names).
 
-2. **Esquema**
-   - Comparação entre:
-     - consultas sobre o **esquema em estrela**;
-     - consultas sobre a **tabela única**.
-   - Permite estudar como a complexidade estrutural do schema afeta a acurácia dos modelos.
+2. **Schema**
+   - Comparison between:
+     - queries over the **star schema**;
+     - queries over the **single-table** schema.
+   - Enables studying how schema structural complexity affects model accuracy.
 
-Sugestão de usos:
+Suggested use cases:
 
-- Avaliar modelos de LLM em cenário zero-shot, fornecendo apenas o schema e a pergunta.
-- Comparar desempenho entre diferentes modelos abertos (multilíngues, focados em código, etc.).
-- Investigar erros típicos de geração de SQL em contexto de dados governamentais.
+- Evaluate LLMs in zero-shot mode, providing only the schema and the question.
+- Compare performance across different open-source models (multilingual, code-oriented, etc.).
+- Investigate typical SQL generation errors in the context of government finance data.
 
 ---
 
-## 5. Como começar
+## 5. Getting started
 
-### 5.1. Clonar o repositório
+### 5.1. Clone the repository
 
 ```bash
 git clone https://github.com/Jonasorso/Despesas_Sc_Text-To-Sql.git
