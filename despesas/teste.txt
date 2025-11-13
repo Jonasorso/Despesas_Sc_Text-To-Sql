@@ -1,0 +1,50 @@
+import sqlite3
+import pandas as pd
+import logging
+from pathlib import Path
+
+# Configurações
+CSV_PATH = "/home/jonas/nl2sql/data/despesas/nl2sql_50_questoes.csv"  # ou o CSV consolidado com todas as 50 questões
+DB_PATH = "/home/jonas/nl2sql/data/despesas/despesas.db"     # caminho do banco SQLite
+LOG_DIR = Path(DB_PATH).parent
+LOG_FILE = LOG_DIR / "execucao_sql.log"
+
+# Setup do logger
+logging.basicConfig(
+    filename=LOG_FILE,
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+)
+
+def main():
+    # Carrega as questões
+    try:
+        df = pd.read_csv(CSV_PATH, sep=";", encoding="latin1", dtype=str)
+    except Exception as e:
+        logging.error(f"Erro ao carregar o CSV: {e}")
+        return
+
+    # Conecta ao banco de dados
+    try:
+        conn = sqlite3.connect(DB_PATH)
+    except Exception as e:
+        logging.error(f"Erro ao conectar ao banco de dados: {e}")
+        return
+
+    # Executa cada SQL
+    for i, row in df.iterrows():
+        question_pt = row.get('pt_question', '')
+        sql = row.get('expected_sql', '').strip()
+        try:
+            cursor = conn.execute(sql)
+            results = cursor.fetchall()
+            logging.info(f"[OK] Q{i+1}: '{question_pt}' => {sql} => {len(results)} resultados")
+        except Exception as e:
+            logging.error(f"[ERRO] Q{i+1}: '{question_pt}' => {sql} => {str(e)}")
+
+    conn.close()
+    logging.info("Execução concluída.")
+
+if __name__ == "__main__":
+    main()
+

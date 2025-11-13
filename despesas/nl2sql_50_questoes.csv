@@ -1,0 +1,58 @@
+db_id;question_pt;question_en;query;
+despesas;Quais são os anos disponíveis nos dados?;Which years are available in the data?;SELECT DISTINCT ano FROM tempo;
+despesas;Quais são os meses registrados?;Which months are recorded?;SELECT DISTINCT mes FROM tempo;
+despesas;Quantos registros existem na tabela de despesas?;How many records are there in the expenses table?;SELECT COUNT(*) FROM fato_despesa;
+despesas;Quais são os poderes registrados?;Which government branches are registered?;SELECT DISTINCT p.nome_poder FROM fato_despesa fp left join poder p on fp.cod_poder = p.cod_poder;
+despesas;Quais são as funções de despesa distintas listadas?;What are the listed expense functions?;SELECT DISTINCT f.nome_funcao  FROM fato_despesa fp left join funcao f  on fp.cod_funcao = f.cod_funcao;
+despesas;Quais são os órgãos disponíveis?;Which departments are available?;SELECT DISTINCT o.nome_orgao  FROM fato_despesa fp left join orgao o   on fp.cod_orgao = o.cod_orgao;
+despesas;Quais são os códigos de unidade gestora distintos?;What are the managing unit codes?;SELECT DISTINCT cod_ug  FROM fato_despesa;
+despesas;Liste todas as fontes de recurso distintas.;List all distinct resource sources.;SELECT DISTINCT fr.nome_fonte  FROM fato_despesa fp left join fonte_recurso fr on fp.cod_fonte = fr.cod_fonte;
+despesas;Quantos credores estão registrados?;How many creditors are registered?;SELECT count(distinct cod_credor) FROM fato_despesa;
+despesas;Qual o número de credores estão registrados?;How many creditors are registered?;SELECT count(distinct cod_credor) FROM fato_despesa;
+despesas;Quais são as programas presentes?;What are the present programs?;SELECT DISTINCT p.nome_programa FROM fato_despesa fp left join programa p  on fp.cod_programa  = p.cod_programa;
+despesas;Qual é o valor total empenhado?;What is the total committed amount?;SELECT SUM(vl_empenhado) FROM fato_despesa;
+despesas;Qual é o valor médio pago?;What is the average amount paid?;SELECT AVG(vl_pago_orcamentario) FROM fato_despesa;
+despesas;Qual é o maior valor liquidado?;What is the highest settled value?;SELECT MAX(vl_liquidado) FROM fato_despesa;
+despesas;Qual é o menor valor de dotação inicial?;What is the lowest initial allocation value?;SELECT MIN(vl_dotacao_inicial) FROM fato_despesa;
+despesas;Quantos tipos de fonte existem?;How many types of sources are there?;SELECT count(DISTINCT fr.nome_fonte)  FROM fato_despesa fp left join fonte_recurso fr on fp.cod_fonte = fr.cod_fonte;
+despesas;Qual a quantidade de tipos de fonte existem?;How many types of sources are there?;SELECT count(DISTINCT fr.nome_fonte)  FROM fato_despesa fp left join fonte_recurso fr on fp.cod_fonte = fr.cod_fonte;
+despesas;Qual é a soma total da dotação atualizada?;What is the total of updated allocation?;SELECT SUM(vl_dotacao_atualizada) FROM fato_despesa;
+despesas;Qual é a média do valor empenhado por mês?;What is the average committed value per month?;select mes, AVG(vl_empenhado)  from fato_despesa fd left join tempo t on fd.tempo_id = t.id group by mes; 
+despesas;Qual é o total de pagamentos por função?;What is the total payment by function?;SELECT cod_funcao, SUM(vl_pago_orcamentario) FROM fato_despesa GROUP BY cod_funcao;
+despesas;Qual é o valor médio liquidado por poder?;What is the average settled value by government branch?;SELECT p.nome_poder, AVG(vl_liquidado) FROM fato_despesa fp left join poder p on fp.cod_poder = p.cod_poder GROUP BY p.cod_poder;
+despesas;Qual foi o valor pago em 2025?;What was the amount paid in 2025?;SELECT SUM(vl_pago_orcamentario) FROM fato_despesa fd left join tempo t on fd.tempo_id = t.id  WHERE ano = 2025;
+despesas;Quais despesas foram realizadas no mês de 4/Abril?;What expenses were made in April?;SELECT * FROM fato_despesa FD left join tempo t on FD.tempo_id  = t.id WHERE nro_mes  = '4';
+despesas;Qual é o total empenhado pelo órgão 'Secretaria de Estado da Segurança Pública'?;What is the total committed by 'Secretaria de Estado da Segurança Pública'?;SELECT SUM(vl_empenhado) FROM fato_despesa  fp left join orgao o   on fp.cod_orgao = o.cod_orgao WHERE o.nome_orgao LIKE '%Segurança Pública%';
+despesas;Quais são as despesas da função 'Educação'?;What are the expenses for the 'Education' function?;SELECT * FROM fato_despesa fd left join funcao f on fd.cod_funcao = f.cod_funcao WHERE f.nome_funcao like '%Educação%';
+despesas;Qual o total liquidado para o credor código 415045?;What is the settled total for code 415045?;SELECT SUM(vl_liquidado) FROM fato_despesa WHERE cod_credor  = 415045;
+despesas;Selecione todos os registros do 2º trimestre de 2025.;Select all records from the 2nd quarter of 2025.;select t.trimestre, AVG(vl_liquidado)  from fato_despesa fd left join tempo t on fd.tempo_id = t.id  where t.trimestre = '2º Trimestre' group by t.trimestre;
+despesas;Qual é o total empenhado para o código de ação 1070?;What is the total committed for action code 1070?;SELECT SUM(vl_empenhado) FROM fato_despesa WHERE cod_acao = 1070;
+despesas;Quais são as despesas emergenciais registradas?;Which emergency expenses are registered?;SELECT * FROM fato_despesa WHERE indicador_emergencial  = 0;
+despesas;Quais são os registros com fonte recurso 'Fonte Tesouro'?;What are the records with source 'Fonte Tesouro'?;SELECT * FROM fato_despesa fp left join fonte_recurso fr on fp.cod_fonte = fr.cod_fonte WHERE fr.nome_fonte like '%Fonte Tesouro%';
+despesas;Qual é o valor total liquidado no 1º quadrimestre?;What is the total settled in the 1st four-month period?;select t.quadrimestre , AVG(vl_liquidado)  from fato_despesa fd left join tempo t on fd.tempo_id = t.id  where t.quadrimestre  = '1º Quadrimestre' group by t.quadrimestre ;
+despesas;Quais são os registros de 2025 para a unidade gestora 160085?;What are the 2025 records for managing unit 160085?;SELECT * FROM fato_despesa fd left join tempo t on fd.tempo_id = t.id   WHERE ano = 2025 AND cod_ug  = 160085;
+despesas;Qual é a média do valor pago em Abril de 2025?;What is the average amount paid in April 2025?;SELECT AVG(vl_pago_orcamentario) FROM fato_despesa fd left join tempo t on fd.tempo_id = t.id   WHERE ano = 2025  AND nro_mes  = '04';
+despesas;Quais ações têm valor liquidado acima de 50000000?;Which actions have settled value above 50000000?;SELECT cod_acao FROM fato_despesa WHERE vl_liquidado > 50000000;
+despesas;Qual é o total empenhado pela gestão 16097?;What is the total committed by management 16097?;SELECT SUM(vl_empenhado) FROM fato_despesa WHERE cod_gestao = 16097;
+despesas;Quais registros têm subfunção 'Educação Básica' em 2025?;Which records have subfunction 'Educação Básica' in 2025?;SELECT * FROM fato_despesa fd  left join subfuncao s on fd.cod_subfuncao = s.cod_subfuncao  left join tempo t on fd.tempo_id = t.id WHERE s.nome_subfuncao like '%Educação Básica%' AND ano = 2025;
+despesas;Qual foi o valor total empenhado por cada órgão?;What was the total committed amount by each agency?;SELECT o.nome_orgao, SUM(f.vl_empenhado) FROM fato_despesa f JOIN orgao o  ON f.cod_orgao = o.cod_orgao GROUP BY o.cod_orgao;
+despesas;Quais ações tiveram despesas liquidadas acima de 1 milhão?;Which actions had settled expenses above 1 million?;SELECT a.nome_acao FROM fato_despesa f JOIN acao a ON f.cod_acao  = a.cod_acao  WHERE f.vl_liquidado > 1000000;
+despesas;Qual órgão teve mais pagamentos no primeiro trimestre?;Which agency had the most payments in the first quarter?;SELECT o.nome_orgao, SUM(f.vl_pago_orcamentario) FROM fato_despesa f left join orgao o ON f.cod_orgao = o.cod_orgao left join tempo t on f.tempo_id = t.id WHERE t.nro_trimestre = 1 GROUP BY o.cod_orgao ORDER BY SUM(f.vl_pago_orcamentario ) DESC LIMIT 1;
+despesas;Liste os elementos de despesa com valores atualizados acima da média geral.;List expense elements with updated values above overall average.;SELECT e.nome_elemento FROM fato_despesa f JOIN elemento e ON f.cod_elemento  = e.cod_elemento  GROUP BY e.nome_elemento HAVING AVG(f.vl_dotacao_atualizada ) > (SELECT AVG(vl_dotacao_atualizada) FROM fato_despesa);
+despesas;Quais são os órgãos que realizaram despesas com material de consumo?;Which agencies made expenses with material consumption?;SELECT DISTINCT o.nome_orgao FROM fato_despesa f JOIN orgao o  ON f.cod_orgao = o.cod_orgao JOIN elemento e ON f.cod_elemento  = e.cod_elemento WHERE e.nome_elemento LIKE '%material de consumo%';
+despesas;Qual a ação com maior valor de dotação inicial em 2025?;What is the action with the highest initial appropriation in 2025?;SELECT a.nome_acao FROM fato_despesa f JOIN acao a ON f.cod_acao  = a.cod_acao join tempo t on f.tempo_id = t.id WHERE t.ano = 2025 ORDER BY f.vl_dotacao_inicial DESC LIMIT 1;
+despesas;Quais elementos de despesa foram usados por mais de um órgão?;Which expense elements were used by more than one agency?;SELECT e.nome_elemento FROM fato_despesa f JOIN elemento e ON f.cod_elemento  = e.cod_elemento  GROUP BY e.nome_elemento HAVING COUNT(DISTINCT f.cod_orgao ) > 1;
+despesas;Liste os valores pagos por cada combinação de órgão e ação.;List payments for each agency-action combination.;SELECT o.nome_orgao, a.nome_acao, SUM(f.vl_pago_orcamentario) FROM fato_despesa f JOIN orgao o  ON f.cod_orgao = o.cod_orgao JOIN acao a ON f.cod_acao  = a.cod_acao GROUP BY o.nome_orgao, a.nome_acao;
+despesas;Qual foi o valor liquidado por mês para a ação "Gestão das atividades aéreas"?";What was the settled value per month for the action "Gestão das atividades aéreas"?;SELECT t.nro_mes, SUM(f.vl_liquidado) FROM fato_despesa f JOIN acao a ON f.cod_acao  = a.cod_acao  JOIN tempo t ON f.tempo_id = t.id WHERE a.nome_acao LIKE '%Gestão das atividades aéreas%' GROUP BY t.nro_mes;
+despesas;Quais órgãos tiveram despesas em mais de 3 meses diferentes?;Which agencies had expenses in more than 3 different months?;SELECT o.nome_orgao FROM fato_despesa f JOIN orgao o ON f.cod_orgao  = o.cod_orgao JOIN tempo t ON f.tempo_id  = t.id GROUP BY o.nome_orgao HAVING COUNT(DISTINCT t.nro_mes) > 3;
+despesas;Qual o valor orçado por mes ?;What is the budgeted amount per month?;SELECT t.mes, SUM(f.vl_dotacao_inicial) AS valor_orcado FROM fato_despesa f JOIN tempo t  ON f.tempo_id = t.id GROUP BY t.mes;
+despesas;Quantas despesas foram empenhadas em abril de 2025?;How many expenses were committed in April 2025?; SELECT COUNT(*) FROM fato_despesa f JOIN tempo t  ON f.tempo_id = t.id WHERE t.nro_mes  = '04' AND t.ano = 2025 AND f.vl_empenhado > 0;
+despesas;Qual a quantidade de despesas foram empenhadas em abril de 2025?;How many expenses were committed in April 2025?; SELECT COUNT(*) FROM fato_despesa f JOIN tempo t  ON f.tempo_id = t.id WHERE t.nro_mes  = '04' AND t.ano = 2025 AND f.vl_empenhado > 0;
+despesas;Liste despesas com valor pago superior a 1000;List expenses with paid value greater than 1000;SELECT * FROM fato_despesa WHERE vl_pago_orcamentario > 1000;
+despesas;Quais são os registros com valor liquidado entre 100 e 1000?;What are the records with settled value between 100 and 1000?;SELECT * FROM fato_despesa WHERE vl_liquidado BETWEEN 100 AND 1000;
+despesas;Quais despesas têm dotação inicial igual a zero?;Which expenses have zero initial allocation?;SELECT * FROM fato_despesa WHERE vl_dotacao_inicial = 0;
+   
+
+
+
+   
